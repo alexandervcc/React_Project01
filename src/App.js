@@ -3,16 +3,21 @@ import AddUser from './Components/Users/AddUser'
 import UserList from './Components/Users/UserList'
 
 function App() {
-  const[userlist,setUserlist]=useState();
+  const[userList,setUserList]=useState([]);
 
-  const handleAddUser=()=>{
-
+  const addUserHandler=(uname,uage)=>{
+    setUserList((prevList)=>{
+      //Latest state snapshot
+      return [...prevList,{name:uname,age:uage,id:Math.random().toString()}]
+    });
   };
+
+  console.log(userList)
 
   return (
     <div>
-      <AddUser/>
-      <UserList users={[]}/>
+      <AddUser onAddUser={addUserHandler}/>
+      <UserList users={userList}/>
     </div>
   );
 }
