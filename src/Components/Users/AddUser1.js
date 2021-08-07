@@ -1,5 +1,4 @@
-//USING REFS NOT STATE
-import React, { useState, useRef } from 'react'
+import React, { useState ,useRef} from 'react'
 import Wrapper from '../Helpers/Wrapper';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
@@ -9,27 +8,31 @@ import classes from "./AddUser.module.css"
 function AddUser(props) {
     //useRef(): only inside functional components
     //ref: content of a DOM node
-    const nameInputRef = useRef();
-    const ageInputRef = useRef();
+    const nameInputRef=useRef();
+    const ageInputRef=useRef();
 
+    const [user, setUser] = useState('');
+    const [age, setAge] = useState('');
     const [error, setError] = useState();
 
     const addUserHandler = (event) => {
         event.preventDefault();
-        const enteredName = nameInputRef.current.value;
-        const enteredAge = ageInputRef.current.value;
-
-        console.log('  RegUser:', nameInputRef.current.value);
-        console.log('   RefAge:', ageInputRef.current.value);
-
+        const enteredName=nameInputRef.current.value;
+        const enteredAge=ageInputRef.current.value;
+        
+        console.log('RegUser:',nameInputRef.current.value);
+        console.log(' RefAge:',ageInputRef.current.value);
+        
+        //if (user.trim().length === 0 || age.trim() === 0) {
         if (enteredName.trim().length === 0 || enteredAge.trim() === 0) {
-            console.log("Invalid Inputs");
+                console.log("Invalid Inputs");
             setError({
                 title: "Invalid Input",
                 message: "Insert valid name and age (no empty)"
             });
             return;
         }
+        //if (+age < 1) {
         if (+enteredAge < 1) {
             console.log("Invalid Age");
             setError({
@@ -38,13 +41,22 @@ function AddUser(props) {
             });
             return;
         }
-
-        console.log(enteredName, enteredAge);
-        //Props function to update Data on Upper Component
+        
+        console.log(user, age);
+        //Props function to update Data
+        //props.onAddUser(user, age);
         props.onAddUser(enteredName, enteredAge);
-        nameInputRef.current.value = "";
-        ageInputRef.current.value = "";
+
+        setUser('')
+        setAge('')
     }
+
+    const userChangeHandler = (event) => {
+        setUser(event.target.value)
+    };
+    const ageChangeHandler = (event) => {
+        setAge(event.target.value)
+    };
 
     const errorHandler = () => {
         setError(null)
@@ -63,15 +75,19 @@ function AddUser(props) {
             <Card className={classes.input}>
                 <form onSubmit={addUserHandler}>
                     <label htmlFor="username">User Name:</label>
-                    <input
+                    <input 
                         id="username"
                         type="text"
+                        onChange={userChangeHandler}
+                        value={user} 
                         ref={nameInputRef}
                     />
                     <label htmlFor="age">Age:</label>
-                    <input
+                    <input 
                         id="age"
                         type="number"
+                        onChange={ageChangeHandler}
+                        value={age} 
                         ref={ageInputRef}
                     />
                     <Button type="submit">Add User</Button>
@@ -82,14 +98,3 @@ function AddUser(props) {
 }
 
 export default AddUser
-
-
-//TEHORY
-/*
-wHEN Using refs a component turns into an Uncontrolled ONe
--Because React does not have anymore control over the compomnent
--In fact is would be (i think) native DOM with Vanilla JS
-
-
-
-*/
